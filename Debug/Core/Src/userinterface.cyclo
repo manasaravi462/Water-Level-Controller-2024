@@ -1,0 +1,6 @@
+../Core/Src/userinterface.c:16:6:ReadModeSwitch	1
+../Core/Src/userinterface.c:20:6:Protection	7
+../Core/Src/userinterface.c:44:6:UIStatus	1
+../Core/Src/userinterface.c:51:6:UIMessage	1
+../Core/Src/userinterface.c:57:6:TurnOnMotor	2
+../Core/Src/userinterface.c:68:6:AutoProtection	3

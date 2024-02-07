@@ -1,0 +1,15 @@
+../Core/Src/lcd.c:29:19:LcdCreate	2
+../Core/Src/lcd.c:52:6:LcdInit	2
+../Core/Src/lcd.c:67:19:LcdInitialize	1
+../Core/Src/lcd.c:80:6:LcdInt	1
+../Core/Src/lcd.c:90:6:LcdString	2
+../Core/Src/lcd.c:99:6:LcdCursor	1
+../Core/Src/lcd.c:107:6:LcdClear	1
+../Core/Src/lcd.c:111:6:LcdDefineChar	2
+../Core/Src/lcd.c:124:6:LcdWriteCommand	2
+../Core/Src/lcd.c:139:6:LcdWriteData	2
+../Core/Src/lcd.c:154:6:LcdWrite	2
+../Core/Src/lcd.c:169:6:LcdClearBit	1
+../Core/Src/lcd.c:177:6:DisplayLevel	3
+../Core/Src/lcd.c:192:6:DisplayClearInAuto	2
+../Core/Src/lcd.c:198:6:DisplayClearInManual	2
