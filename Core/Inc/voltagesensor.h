@@ -23,4 +23,4 @@ void Check(float voltage);
 void CheckOverVoltage(void);
 /* Private function defines end ----------------------------------------------------------*/
 
-#endif /* __VOLTAGE_SENSOR_H */
+#endif /* __VOLTAGE_SENSOR_H */

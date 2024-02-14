@@ -36,7 +36,7 @@ extern SParameter VoltageParameters;
 
 /* ***** MAIN FUNCTION *****
  * Every 2ms the voltage sensor gets sampled through the ADC pin.
- * The analog value per sample is squared and accumulated for every 500 samples before being averaged.
+ * The analog value per sample is squared and accumulated for every 100 samples before being averaged.
  * The averaged value is then getting square-rooted.
  * And multiplied with scaling factor of calibration to map the actual voltage to the sensor output voltage.
  * The final vRMS value is obtained and value gets refreshed whenever the sample count reaches 500.
@@ -45,7 +45,7 @@ extern SParameter VoltageParameters;
  * @retval None                   */
 
 void ReadVoltage() {
-	if (VoltageParameters.samplesTaken >= 500) {
+	if (VoltageParameters.samplesTaken >= 100) {
 		VoltageParameters.voltage = sqrt(
 				VoltageParameters.sum
 						/ VoltageParameters.samplesTaken) * SCALING_FACTOR;
@@ -53,7 +53,6 @@ void ReadVoltage() {
 		VoltageParameters.samplesTaken = 0;
 		VoltageParameters.sum = 0;
 	}
-	HAL_Delay(150);
 
 }
 
@@ -73,28 +72,28 @@ void CheckOverVoltage(void) {
  * @retval None                           */
 void Check(float voltage) {
 
-	static int highCount = 0, lowCount = 0;
+	static int S__highCount = 0, S__lowCount = 0;
 	// voltage is more then 250 highCount is increment.
 	if (VoltageParameters.voltage > 250) {
-		highCount++;
+		S__highCount++;
 	}
 	//voltage is below then 200 lowCount is increment.
 	if (VoltageParameters.voltage < 200) {
-		lowCount++;
+		S__lowCount++;
 	}
 	// voltage is normal  highCount& lowCount is reset.
 	if (VoltageParameters.voltage < 250 && VoltageParameters.voltage > 200) {
-		highCount = 0;
-		lowCount = 0;
+		S__highCount = 0;
+		S__lowCount = 0;
 	}
 
 	// five sample voltage are more or less compare to normal voltage set the Over/Under voltage flags.
-	if (highCount >= 5) {
+	if (S__highCount >= 5) {
 		SystemFlags.overVoltageFlag = 1;
 	} else {
 		SystemFlags.overVoltageFlag = 0;
 	}
-	if (lowCount >= 5) {
+	if (S__lowCount >= 5) {
 		SystemFlags.underVoltageFlag = 1;
 	} else {
 		SystemFlags.underVoltageFlag = 0;

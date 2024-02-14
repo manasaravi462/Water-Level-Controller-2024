@@ -10,18 +10,21 @@
   ******************************************************************************/
 
 #include "lcd.h"
-const uint8_t ROW_16[] = { 0x00, 0x40, 0x10, 0x50 };
-const uint8_t ROW_20[] = { 0x00, 0x40, 0x14, 0x54 };
-
 extern Lcd_HandleTypeDef lcd;
-uint8_t clear_state = 0;
-/************************************** Static declarations **************************************/
+
+/*Private Variables-----------------------------------*/
+const uint8_t C__ROW_16[] = { 0x00, 0x40, 0x10, 0x50 };
+static uint8_t S__clearState = 0;
+/*Private Variables end-----------------------------------*/
+
+
+/* Static declarations ----------------------------------------*/
 
 static void LcdWriteData(Lcd_HandleTypeDef *lcd, uint8_t data);
 static void LcdWriteCommand(Lcd_HandleTypeDef *lcd, uint8_t command);
 static void LcdWrite(Lcd_HandleTypeDef *lcd, uint8_t data, uint8_t len);
 
-/************************************** Function definitions **************************************/
+/* Function definitions ---------------------------------------*/
 
 /**
  * Create new Lcd_HandleTypeDef and initialize the Lcd
@@ -29,7 +32,7 @@ static void LcdWrite(Lcd_HandleTypeDef *lcd, uint8_t data, uint8_t len);
 Lcd_HandleTypeDef LcdCreate(
 Lcd_PortType lcd_port[4], Lcd_PinType lcd_pin[4],
 Lcd_PortType rs_port, Lcd_PinType rs_pin,
-Lcd_PortType en_port, Lcd_PinType en_pin, Lcd_ModeTypeDef mode) {
+Lcd_PortType en_port, Lcd_PinType en_pin, LcdModeTypeDef mode) {
 
 	Lcd_HandleTypeDef lcd = {
 
@@ -98,7 +101,7 @@ void LcdString(Lcd_HandleTypeDef *lcd, char *string) {
  */
 void LcdCursor(Lcd_HandleTypeDef *lcd, uint8_t row, uint8_t col) {
 
-	LcdWriteCommand(lcd, SET_DDRAM_ADDR + ROW_16[row] + col);
+	LcdWriteCommand(lcd, SET_DDRAM_ADDR + C__ROW_16[row] + col);
 }
 
 /**
@@ -106,14 +109,6 @@ void LcdCursor(Lcd_HandleTypeDef *lcd, uint8_t row, uint8_t col) {
  */
 void LcdClear(Lcd_HandleTypeDef *lcd) {
 	LcdWriteCommand(lcd, CLEAR_DISPLAY);
-}
-
-void LcdDefineChar(Lcd_HandleTypeDef *lcd, uint8_t code, uint8_t bitmap[]) {
-	LcdWriteCommand(lcd, SETCGRAM_ADDR + (code << 3));
-	for (uint8_t i = 0; i < 8; ++i) {
-		LcdWriteData(lcd, bitmap[i]);
-	}
-
 }
 
 /************************************** Static function definition **************************************/
@@ -162,13 +157,13 @@ void LcdWrite(Lcd_HandleTypeDef *lcd, uint8_t data, uint8_t len) {
 	HAL_GPIO_WritePin(lcd->lcd_en_port, lcd->lcd_en_pin, 0); // Data receive on falling edge
 }
 
-/****************          private functions        ************************/
+/****************          functions        ************************/
 
 /* to clear the single bit in lcd*/
 
 void LcdClearBit(Lcd_HandleTypeDef *lcd, uint8_t row, uint8_t col) {
 
-	LcdWriteCommand(lcd, SET_DDRAM_ADDR + ROW_16[row] + col);
+	LcdWriteCommand(lcd, SET_DDRAM_ADDR + C__ROW_16[row] + col);
 	LcdString(lcd, "      ");
 }
 
@@ -190,15 +185,15 @@ void DisplayLevel(Lcd_HandleTypeDef *lcd, uint8_t level) {
 /*clear the display when it switches between modes*/
 
 void DisplayClearInAuto(Lcd_HandleTypeDef *lcd) {
-	if (clear_state == 1) {
+	if (S__clearState == 1) {
 		LcdClear(lcd);
-		clear_state = 0;
+		S__clearState = 0;
 	}
 }
 void DisplayClearInManual(Lcd_HandleTypeDef *lcd) {
-	if (clear_state == 0) {
+	if (S__clearState == 0) {
 		LcdClear(lcd);
-		clear_state = 1;
+		S__clearState = 1;
 	}
 }
 
